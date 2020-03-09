@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package account_grpc;
+
+service AccountRoutes {
+    rpc SavePayment(Payment) returns (Reference) {}
+}
+
+message Payment {
+    int32 amount = 1;
+    bytes account_holder = 2;
+    string bank = 3;
+    string payment_id = 4;
+}
+
+message Reference {
+    string bank = 1;
+    bool confirmed = 2;
+    bytes account_paid_to = 3;
+}
