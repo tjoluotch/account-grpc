@@ -3,5 +3,5 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println("hello go grpc")
+	fmt.Println("hello account g-rpc")
 }
