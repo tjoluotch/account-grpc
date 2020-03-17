@@ -3,15 +3,19 @@ package server
 import (
 	"account-grpc"
 	"context"
+	"go.uber.org/zap"
+	"sync"
 )
 
-type accountRPCServer struct {
+type AccountRPCServer struct {
 	account_grpc.UnimplementedAccountRoutesServer
+	mu sync.Mutex
+	Logger *zap.SugaredLogger
 }
 
 
 // defined implementation of AccountRoutesServer interface
-func (srv *accountRPCServer) SavePayment(ctx context.Context, payment *account_grpc.Payment) (*account_grpc.Reference, error){
+func (srv *AccountRPCServer) SavePayment(ctx context.Context, payment *account_grpc.Payment) (*account_grpc.Reference, error){
 
 
 }
