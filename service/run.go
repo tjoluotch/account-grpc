@@ -1,9 +1,11 @@
 package main
 
 import (
+	account_grpc "account-grpc"
 	"account-grpc/server"
 	"fmt"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
 	"log"
 	"net"
 )
@@ -18,20 +20,31 @@ func newServer(l *zap.SugaredLogger) *server.AccountRPCServer {
 }
 
 func main() {
-	// logger init
+	// logger initialization
 	logger, err := server.BuildLogger()
 	if err != nil {
 		log.Fatalf("failed to initialize logger: %v", err)
 	}
 	logger.Info("logger initialised")
-	acgs := newServer(logger)
+
+	// created a new account rpc service
+	accRPCService := newServer(logger)
 	logger.Info("created account grpc server struct")
 
-	logger.Info("network listener init")
+	// network listener creation
+	logger.Info("network listener initialization")
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", PORT))
 	if err != nil {
 		logger.Errorw("failed to create network listener",
 			"error", err)
 	}
 
+	// grpc server initialization
+	grpcServer := grpc.NewServer()
+	account_grpc.RegisterAccountRoutesServer(grpcServer, accRPCService)
+	err = grpcServer.Serve(lis)
+	if err != nil {
+		logger.Errorw("Failed to create grpc server",
+			"error", err)
+	}
 }
