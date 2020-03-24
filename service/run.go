@@ -38,6 +38,7 @@ func main() {
 		logger.Errorw("failed to create network listener",
 			"error", err)
 	}
+	logger.Info(lis.Addr().String(), " ", lis.Addr().Network())
 
 	// grpc server initialization
 	grpcServer := grpc.NewServer()
