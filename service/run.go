@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	PORT = 3000
+	PORT = 2000
 )
 
 func newServer(l *zap.SugaredLogger) *server.AccountRPCServer {
@@ -41,7 +41,8 @@ func main() {
 	logger.Info(lis.Addr().String(), " ", lis.Addr().Network())
 
 	// grpc server initialization
-	grpcServer := grpc.NewServer()
+	var opts []grpc.ServerOption
+	grpcServer := grpc.NewServer(opts...)
 	account_grpc.RegisterAccountRoutesServer(grpcServer, accRPCService)
 	err = grpcServer.Serve(lis)
 	if err != nil {
