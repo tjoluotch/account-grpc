@@ -17,5 +17,5 @@ type AccountRPCServer struct {
 // defined implementation of AccountRoutesServer interface
 func (srv *AccountRPCServer) SavePayment(ctx context.Context, payment *account_grpc.Payment) (*account_grpc.Reference, error){
 	srv.Logger.Info("Account grpc server called stub")
-	return nil, nil
+	return &account_grpc.Reference{}, nil
 }

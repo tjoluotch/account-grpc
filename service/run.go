@@ -3,7 +3,6 @@ package main
 import (
 	account_grpc "account-grpc"
 	"account-grpc/server"
-	"fmt"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"log"
@@ -11,7 +10,7 @@ import (
 )
 
 const (
-	PORT = 2000
+	PORT = "2000"
 )
 
 func newServer(l *zap.SugaredLogger) *server.AccountRPCServer {
@@ -33,7 +32,12 @@ func main() {
 
 	// network listener creation
 	logger.Info("network listener initialization")
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", PORT))
+	addr, err := net.LookupHost("grpc-account")
+	if err != nil {
+		logger.Error("host lookup failed:", err)
+	}
+	logger.Info("grpc server host", addr)
+	lis, err := net.Listen("tcp", net.JoinHostPort(addr[0], PORT))
 	if err != nil {
 		logger.Errorw("failed to create network listener",
 			"error", err)
