@@ -1,8 +1,8 @@
-package main
+package account_grpc
 
 import (
-	account_grpc "account-grpc"
-	"account-grpc/server"
+	"account-grpc/internal/api"
+	"account-grpc/internal/config"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"log"
@@ -13,14 +13,14 @@ const (
 	PORT = "2000"
 )
 
-func newServer(l *zap.SugaredLogger) *server.AccountRPCServer {
-	accountGrpcServer := &server.AccountRPCServer{Logger:l}
+func newServer(l *zap.SugaredLogger) *api.AccountRPCServer {
+	accountGrpcServer := &api.AccountRPCServer{Logger: l}
 	return accountGrpcServer
 }
 
 func main() {
 	// logger initialization
-	logger, err := server.BuildLogger()
+	logger, err := config.BuildLogger()
 	if err != nil {
 		log.Fatalf("failed to initialize logger: %v", err)
 	}
@@ -47,7 +47,7 @@ func main() {
 	// grpc server initialization
 	var opts []grpc.ServerOption
 	grpcServer := grpc.NewServer(opts...)
-	account_grpc.RegisterAccountRoutesServer(grpcServer, accRPCService)
+	api.RegisterAccountRoutesServer(grpcServer, accRPCService)
 	err = grpcServer.Serve(lis)
 	if err != nil {
 		logger.Errorw("Failed to create grpc server",
